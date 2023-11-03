@@ -11,7 +11,7 @@ const nextAuthOptions: NextAuthOptions = {
 			},
 
 			async authorize(credentials, req) {
-				const response = await fetch('http://localhost:3002/login', {
+				const response = await fetch('http://localhost:8080/auth/login', {
 					method: 'POST',
 					headers: {
 						'Content-type': 'application/json'
@@ -22,10 +22,10 @@ const nextAuthOptions: NextAuthOptions = {
 					})
 				})
 
-				const user = await response.json()
+				const data = await response.json()
 
-				if (user && response.ok) {
-					return user
+				if (data && response.ok && data.token) {
+					return { ...data, email: credentials?.email } // Incluindo o email na resposta do token
 				}
 
 				return null
@@ -37,7 +37,9 @@ const nextAuthOptions: NextAuthOptions = {
 	},
 	callbacks: {
 		async jwt({ token, user }) {
-			user && (token.user = user)
+			if (user) {
+				token.user = user
+			}
 			return token
 		},
 		async session({ session, token }){
