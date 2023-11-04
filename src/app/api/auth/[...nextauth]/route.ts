@@ -17,15 +17,16 @@ const nextAuthOptions: NextAuthOptions = {
 						'Content-type': 'application/json'
 					},
 					body: JSON.stringify({
-						email: credentials?.email,
+						login: credentials?.email,
 						password: credentials?.password
 					})
 				})
 
 				const data = await response.json()
+				console.log('/', data)
 
-				if (data && response.ok && data.token) {
-					return { ...data, email: credentials?.email } // Incluindo o email na resposta do token
+				if (data) {
+					return data
 				}
 
 				return null
@@ -36,14 +37,18 @@ const nextAuthOptions: NextAuthOptions = {
 		signIn: '/'
 	},
 	callbacks: {
-		async jwt({ token, user }) {
-			if (user) {
-				token.user = user
-			}
+		async jwt({ token }) {
 			return token
 		},
-		async session({ session, token }){
-			session = token.user as any
+		async session({ session }){
+			// let user = {
+			// 	id: '1',
+			// 	email: '1',
+			// 	name: '/2'
+			// }
+			// let session2 = user
+
+			// session =  session2 as any
 			return session
 		}
 	}
