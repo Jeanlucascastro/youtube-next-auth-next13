@@ -6,6 +6,7 @@ import Link from "next/link"
 
 export default async function Admin(){
 	const session = await getServerSession(nextAuthOptions)
+	
 
 	
 

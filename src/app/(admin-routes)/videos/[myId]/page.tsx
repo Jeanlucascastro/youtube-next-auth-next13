@@ -1,13 +1,12 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import YouTube from 'react-youtube';
-import axios from '../../../../../lib/axios'
+import axios from 'axios'
 
 
 async function video({ params }: {
     params: { myId: string, }
 }) {
-    const [data, setData] = useState(null);
 
     const [nomeAula, setNomeAula] = useState('');
     const [idVideo, setIdVideo] = useState('');
@@ -26,11 +25,11 @@ async function video({ params }: {
                         Authorization: `Bearer ${accessToken}`,
                         'Access-Control-Allow-Origin': '*',
                         'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
-                        'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE'
+                        'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE',
+                        'Content-Type': 'application/json'
                     }
                 });
                 
-                setData(response.data);
                 console.log('response.data', response.data)
                 setNomeAula(response.data.name)
                 setIdVideo(response.data.url)
