@@ -1,6 +1,7 @@
-import NextAuth, { NextAuthOptions } from "next-auth"
+import NextAuth, { NextAuthOptions, usuario } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 
+let tokenVar = 'text'
 const nextAuthOptions: NextAuthOptions = {
 	providers: [
 		CredentialsProvider({
@@ -40,15 +41,21 @@ const nextAuthOptions: NextAuthOptions = {
 		async jwt({ token }) {
 			return token
 		},
-		async session({ session }){
-			// let user = {
-			// 	id: '1',
-			// 	email: '1',
-			// 	name: '/2'
-			// }
-			// let session2 = user
+		async session({ session, token, user }){
 
-			// session =  session2 as any
+
+			if (user) {
+				let usera = user as unknown as usuario
+
+				session.user.id = usera.id
+				session.user.email = usera.email
+				session.user.name = usera.name
+				session.user.token = token
+				tokenVar = JSON.stringify(token);;
+
+			}
+
+
 			return session
 		}
 	}
@@ -56,4 +63,4 @@ const nextAuthOptions: NextAuthOptions = {
 
 const handler = NextAuth(nextAuthOptions)
 
-export { handler as GET, handler as POST, nextAuthOptions }
+export { handler as GET, handler as POST, nextAuthOptions, tokenVar }
